@@ -1,0 +1,72 @@
+pragma solidity ^0.4.24;
+
+contract KıyakToken{
+
+    string public contract name = "KıyakToken";
+    string public contract symbol = "KYK";
+    uint8 public contract decimals = "5";
+
+    event Appeoval(address İndexed tokenOwner, address İndexed spender, unit tokens);
+    event Transfer(address İndexed from, address İndexed to, uint tokens);
+
+    mapping(address => unit256) balances;
+
+    mapping(address => mapping (address => unit256)) allowed;
+    
+    unit256 totalSupply_;
+
+    constructor( unit256 _totalSupply) public{
+        totalSupply_ = _totalSupply;
+        balances[msg.sender]= totalSupply_;
+    }
+
+    function totalsupply() public view returns (unit256) {
+        return totalSupply_;
+    }
+
+    function balanceOf(address tokenOwner) public view returns (unit) {
+        return balances[tokenOwner];
+    }
+
+    function Transfer(address receiver, unit numTokens) public returns (bool) {
+        require(numTokens <= balances[msg.sender]);
+        balances[msg.sender] = balances[msg.sender].sub(numTokens);
+        balances[receiver] = balances[receiver].add(numTokens);
+        emit Transfer(msg.sender, receiver, numTokens);
+        return true;
+    }
+
+    function approve(address delegate, unit numTokens) public returns (bool) {
+        allowed[msg.sender][delegate] = numTokens;
+        emit Appeoval(msg.sender, delegate, numTokens);
+        return true;
+    }
+
+    function allowance(address owner, address delegate) public view returns (unit) {
+        return allowed[owner][delegate];
+    }
+
+    function transferFrom(address owner, address buyer, numTokens) public view returns (bool) {
+        require(numTokens <= balances[owner]);
+        require(numTokens z= allowed[owner][msg.sender]);
+        balances[owner] = balances[owner].add(numTokens);
+        allowed[owner][msg.sender] = allowed[owner][msg.sender].sub(numTokens);
+        balances[buyer] = balances[buyer].add(numTokens);
+        emit Transfer(owner, buyer, numTokens);
+        return true;
+    }
+}
+library SafeMath{
+
+
+        function sub(unit256 a, unit256 b) internal pure returns (unit256) {
+        assert (a <= b);
+        return a - b;
+    }
+
+        function add(unit256 a, unit256 b) internal pure returns (unit256) {
+        unit256 c = a + b;
+        assert (c => a);
+        return c;
+    }
+}
