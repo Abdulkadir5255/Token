@@ -1,5 +1,4 @@
-pragma solidity >=0.4.0 <0.7.0;
-//pragma solidity ^0.4.24;
+pragma solidity ^0.4.24;
 
 contract KiyakToken{
 
@@ -7,31 +6,31 @@ contract KiyakToken{
     string public constant symbol = "KYK";
     uint8 public constant decimals = 5;
 
-    event Approval(address indexed tokenOwner, address indexed spender, unit tokens);
+    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
     event Transfer(address indexed from, address indexed to, uint tokens);
 
-    mapping(address => unit256) balances;
+    mapping(address => uint256) balances;
 
-    mapping(address => mapping (address => unit256)) allowed;
+    mapping(address => mapping (address => uint256)) allowed;
     
-    unit256 totalSupply_;
+    uint256 totalSupply_;
 
-    using SafeMath for unit256;
+    using SafeMath for uint256;
 
-    constructor( unit256 _totalSupply) public{
+    constructor( uint256 _totalSupply) public{
         totalSupply_ = _totalSupply;
         balances[msg.sender]= totalSupply_;
     }
 
-    function totalsupply() public view returns (unit256) {
+    function totalsupply() public view returns (uint256) {
         return totalSupply_;
     }
 
-    function balanceOf(address tokenOwner) public view returns (unit) {
+    function balanceOf(address tokenOwner) public view returns (uint) {
         return balances[tokenOwner];
     }
 
-    function transfer(address receiver, unit numTokens) public returns (bool) {
+    function transfer(address receiver, uint numTokens) public returns (bool) {
         require(numTokens <= balances[msg.sender]);
         balances[msg.sender] = balances[msg.sender].sub(numTokens);
         balances[receiver] = balances[receiver].add(numTokens);
@@ -39,37 +38,38 @@ contract KiyakToken{
         return true;
     }
 
-    function approve(address delegate, unit numTokens) public returns (bool) {
+    function approve(address delegate, uint numTokens) public returns (bool) {
         allowed[msg.sender][delegate] = numTokens;
-        emit Appeoval(msg.sender, delegate, numTokens);
+        emit Approval(msg.sender, delegate, numTokens);
         return true;
     }
 
-    function allowance(address owner, address delegate) public view returns (unit) {
+    function allowance(address owner, address delegate) public view returns (uint) {
         return allowed[owner][delegate];
     }
 
-    function transferFrom(address owner, address buyer, numTokens) public view returns (bool) {
+    function transferFrom(address owner, address buyer, uint numTokens) public returns (bool) {
         require(numTokens <= balances[owner]);
         require(numTokens <= allowed[owner][msg.sender]);
 
-        balances[owner] = balances[owner].add(numTokens);
+        balances[owner] = balances[owner].sub(numTokens);
         allowed[owner][msg.sender] = allowed[owner][msg.sender].sub(numTokens);
         balances[buyer] = balances[buyer].add(numTokens);
         emit Transfer(owner, buyer, numTokens);
         return true;
     }
 }
+
 library SafeMath{
 
 
-    function sub(unit256 a, unit256 b) internal pure returns (unit256) {
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
         assert (a <= b);
         return a - b;
     }
 
-    function add(unit256 a, unit256 b) internal pure returns (unit256) {
-        unit256 c = a + b;
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
         assert (c >= a);
         return c;
     }
